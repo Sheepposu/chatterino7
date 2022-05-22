@@ -304,7 +304,7 @@ void SplitInput::addShortcuts()
                  "{0,61}[a-"
                  "z0-9]");
 
-             QString message = "Chatting " + ui_.textEdit->toPlainText();
+             QString message = ui_.textEdit->toPlainText();
 
              message = message.replace('\n', ' ');
              QString sendMessage =

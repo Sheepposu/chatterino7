@@ -117,6 +117,9 @@ namespace {
         for (auto jsonEmote_ : jsonEmotes)
         {
             auto jsonEmote = jsonEmote_.toObject();
+            if (jsonEmote.value("name").toString() == "ICANT") {
+                continue;
+            }
 
             // Check our visibility of this emote, don't display if unlisted
             int64_t visibility = jsonEmote.value("visibility").toInt();
@@ -319,6 +322,8 @@ void SeventvEmotes::loadEmotes()
                                           .toObject()
                                           .value("search_emotes")
                                           .toArray();
+
+
             qCDebug(chatterinoSeventv)
                 << "7TV Global Emotes" << parsedEmotes.size();
 
