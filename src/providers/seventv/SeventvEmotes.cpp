@@ -343,9 +343,36 @@ void SeventvEmotes::loadGlobal()
 
 void SeventvEmotes::loadEmotes()
 {
-    loadEmote(QString("60a948e99d598ea72faa2b3d"));
-    loadEmote(QString("6124f0d3ca26708cad4a2677"));
+    // I know this is really scuffed but idc lol
 
+    // Check if file exists already or not
+    QFileInfo check_file("personal_emotes.json");
+    if (check_file.exists() && check_file.isFile()) {}
+        else
+    {
+        QFile createFile;
+        createFile.setFileName("personal_emotes.json");
+        createFile.open(QIODevice::WriteOnly);
+        createFile.write("[]");
+    }
+
+    // Read the emotes from the file
+    QString emoteString;
+    QFile emoteFile;
+    emoteFile.setFileName("personal_emotes.json");
+    emoteFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    emoteString = emoteFile.readAll();
+    qCDebug(chatterinoSeventv)
+        << "Loading personal emotes " << emoteString;
+    QJsonDocument emoteJson = QJsonDocument::fromJson(emoteString.toUtf8());
+    QJsonArray emoteArray = emoteJson.array();
+
+    // Add the emotes
+    for (auto emote : emoteArray) {
+        qCDebug(chatterinoSeventv)
+            << "Adding personal emote" << emote.toString();
+        loadEmote(emote.toString());
+    }
 
     loadGlobal();
 }
