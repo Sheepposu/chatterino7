@@ -278,7 +278,7 @@ void SeventvEmotes::addEmote(QString emoteID, TwitchChannel *channel)
         .execute();
 }
 
-void SeventvEmotes::loadEmotes()
+void SeventvEmotes::loadGlobal()
 {
     qCDebug(chatterinoSeventv) << "Loading 7TV Emotes";
 
@@ -328,9 +328,82 @@ void SeventvEmotes::loadEmotes()
                 << "7TV Global Emotes" << parsedEmotes.size();
 
             auto pair = parseGlobalEmotes(parsedEmotes, *this->global_.get());
-            if (pair.first)
+            if (pair.first) {
+                for (auto emote : *this->global_.get()) {
+                    pair.second[emote.first] = emote.second;
+                }
                 this->global_.set(
                     std::make_shared<EmoteMap>(std::move(pair.second)));
+            }
+            return pair.first;
+        })
+        .execute();
+    //loadPersonal();
+}
+
+void SeventvEmotes::loadEmotes()
+{
+    loadEmote(QString("60a948e99d598ea72faa2b3d"));
+    loadEmote(QString("6124f0d3ca26708cad4a2677"));
+
+
+    loadGlobal();
+}
+
+void SeventvEmotes::loadEmote(QString emoteID)
+{
+    QJsonObject payload, variables;
+
+    QString query = R"(
+        query loadPersonalEmotes($list: [String!]!) {
+        emotes(list: $list) {
+            id
+            name
+            provider
+            provider_id
+            visibility
+            mime
+            height
+            owner {
+                id
+                display_name
+                login
+                twitch_id
+            }
+        }
+    })";
+
+    variables.insert("list", emoteID);
+
+    payload.insert("query", query.replace(whitespaceRegex, " "));
+    payload.insert("variables", variables);
+
+    NetworkRequest(apiUrlGQL, NetworkRequestType::Post)
+        .timeout(30000)
+        .header("Content-Type", "application/json")
+        .payload(QJsonDocument(payload).toJson(QJsonDocument::Compact))
+        .onSuccess([this](NetworkResult result) -> Outcome {
+            qCDebug(chatterinoSeventv) << "Personal emotes start...";
+            QJsonArray parsedEmotes = result.parseJson()
+                                          .value("data")
+                                          .toObject()
+                                          .value("emotes")
+                                          .toArray();
+
+
+            qCDebug(chatterinoSeventv)
+                << "7TV Personal Emotes" << parsedEmotes.size();
+
+            auto pair = parseGlobalEmotes(parsedEmotes, *this->global_.get());
+            if (pair.first)
+            {
+                for (auto emote : *this->global_.get()) {
+                    pair.second[emote.first] = emote.second;
+                }
+
+                this->global_.set(
+                    std::make_shared<EmoteMap>(std::move(pair.second)));
+            }
             return pair.first;
         })
         .execute();

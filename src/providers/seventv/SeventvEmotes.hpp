@@ -42,6 +42,8 @@ public:
     boost::optional<EmotePtr> emote(const EmoteName &name) const;
     static void addEmote(QString emoteID, TwitchChannel *channel);
     void loadEmotes();
+    void loadEmote(QString emoteID);
+    void loadGlobal();
     static void loadChannel(std::weak_ptr<Channel> channel,
                             const QString &channelId,
                             std::function<void(EmoteMap &&)> callback,
