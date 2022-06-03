@@ -278,7 +278,7 @@ void SeventvEmotes::addEmote(QString emoteID, TwitchChannel *channel)
         .execute();
 }
 
-void SeventvEmotes::loadGlobal()
+void SeventvEmotes::loadEmotes()
 {
     qCDebug(chatterinoSeventv) << "Loading 7TV Emotes";
 
@@ -341,7 +341,7 @@ void SeventvEmotes::loadGlobal()
     //loadPersonal();
 }
 
-void SeventvEmotes::loadEmotes()
+void SeventvEmotes::loadPersonal()
 {
     // I know this is really scuffed but idc lol
 
@@ -373,8 +373,6 @@ void SeventvEmotes::loadEmotes()
             << "Adding personal emote" << emote.toString();
         loadEmote(emote.toString());
     }
-
-    loadGlobal();
 }
 
 void SeventvEmotes::loadEmote(QString emoteID)

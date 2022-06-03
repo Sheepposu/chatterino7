@@ -43,7 +43,7 @@ public:
     static void addEmote(QString emoteID, TwitchChannel *channel);
     void loadEmotes();
     void loadEmote(QString emoteID);
-    void loadGlobal();
+    void loadPersonal();
     static void loadChannel(std::weak_ptr<Channel> channel,
                             const QString &channelId,
                             std::function<void(EmoteMap &&)> callback,

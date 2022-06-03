@@ -267,6 +267,7 @@ void TwitchChannel::refresh7TVChannelEmotes(bool manualRefresh)
                     std::make_shared<EmoteMap>(std::move(emoteMap)));
         },
         manualRefresh);
+
 }
 
 void TwitchChannel::refreshHomiesChannelEmotes(bool manualRefresh)

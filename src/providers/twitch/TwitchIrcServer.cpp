@@ -49,6 +49,7 @@ void TwitchIrcServer::initialize(Settings &settings, Paths &paths)
     });
 
     this->seventv.loadEmotes();
+    this->seventv.loadPersonal();
     this->bttv.loadEmotes();
     this->ffz.loadEmotes();
     this->homies.loadEmotes();
